@@ -26,7 +26,7 @@ from mpl_toolkits.basemap import Basemap
 sys.path.insert(0, '/Users/chrisunderwood/Documents/Location/')
 from Locations_Plot import returnMap, draw_map
 
-mpl.rcParams['figure.figsize'] = [10.0, 10.0]
+mpl.rcParams['figure.figsize'] = [15.0, 12.0]
 labelSize = 15
 mpl.rcParams['ytick.labelsize'] =  labelSize
 mpl.rcParams['xtick.labelsize'] =  labelSize
@@ -119,17 +119,30 @@ if __name__ == '__main__':
     if False:
         capacity_map(dfCoors)
         capacity_map(dfWindCoors)
+        capacity_map(dfSolarCoors)
+        
     
     
+    
+    im = plt.scatter(dfSolarCoors['x'], dfSolarCoors['y'], 
+                      # s = dfWind['No. of Turbines']*4,
+                     c = dfSolarCoors['cap'],
+                     ec= 'k',
+                     vmax = np.unique(dfSolarCoors['cap'])[-3],
+                    cmap = 'spring',
+                     )
+    cb = plt.colorbar(im)
+    cb.set_label("Solar Capacity (MW)")
 
                      
     im = plt.scatter(dfWindCoors['x'], dfWindCoors['y'], 
                       s = dfWind['No. of Turbines']*4,
                      c = dfWindCoors['cap'],
                      ec= 'k',
+                    cmap = 'winter'                     
                      )
     cb = plt.colorbar(im)
-    cb.set_label("Capacity (MW)")
+    cb.set_label("Wind Capacity (MW)")
     
     # lArr = len(np.unique(dfWind['No. of Turbines'][cropArray]))
     # msizes = np.unique(dfWind['No. of Turbines'][cropArray])[np.arange(10, lArr, 10)]
@@ -142,46 +155,10 @@ if __name__ == '__main__':
     plt.legend(handles=markers, title = "Number of Wind\nTurbines")
     aspectShow()        
 
-    if False:
-        from OSGridConverter import grid2latlong
-        dfWindCoors['lat'] = np.nan
-        dfWindCoors['long'] = np.nan
-        printing = False
-        for i, (x, y) in enumerate(zip(dfWindCoors['x'], dfWindCoors['y'])):
-            if printing: print (i, x, y)
-            
-            madeupRef = 'TG {:<03d} {:<03d}'.format( int(str(int(x))[:5]), int(str(int(y))[:5]) )
-            if printing: print (madeupRef)
-            
-            l=grid2latlong(madeupRef)
-            dfWindCoors['lat'][i] = l.latitude
-            dfWindCoors['long'][i] = l.longitude
-            print (l.latitude,l.longitude)
-    
-    
-    # fig = plt.figure(figsize = (14, 8))
-    # plt.title("Wind Turbines")
-    
-    # ax = fig.add_subplot(111)
 
-    # map = Basemap(projection='cyl', 
-    #               resolution= 'l',
-    #           lat_0=0, lon_0=0,
-    #           #
-    #            llcrnrlon= -9, 
-    #            urcrnrlon=10, 
-    #           # llcrnrlon=100, 
-    #           # urcrnrlon=300-360,                   
-    #           #
-    #           llcrnrlat= 40, 
-    #           urcrnrlat= 60,
-    #           # **kwargs
-    #           )   
+                     
     
-    # im = map.scatter( dfWindCoors['long'], dfWindCoors['lat'],
-    #                  s = 30
-    #                   )
-    # draw_map(map)
                          
+    
     
     
